@@ -138,6 +138,18 @@
             https://pt.wikipedia.org/wiki/Sinapse
 
 
+        - Se a saida gerada for igual a desejada os pesos sinápticos e limiares receberão o incremento, sendo
+          proporcionalmete aos valores de entrada, contrario a isso sera decrementados.
+          Este processo sera repetido em loop de forma sequencial para as amostras até se obter a saida do perceptron
+          iqual a saida desejada de cada amostra.
+
+          O limiar é uma variavem que é sjustada para auxiliar o treinamento do perceptron, ela pode ser implementada
+          dentro do vetor de pesos sínapticos.
+
+
+                        w = (formula para gerar o vetor com o limiar e os pesos sinápticos)
+
+                             Verificar como é montada esta formula!!!
 
 
 '''
