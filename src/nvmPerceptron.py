@@ -26,7 +26,7 @@
     Matemática da coisa:
 
 
-                pa = somatoria(i=1 até ne) (wi * xi) - theta
+        pa = somatoria(i=1 até ne) (wi * xi) - theta
 
 
         (pa)    -> potencial de ativação {diferença do valor entre o combinador linear somatória, e limiar de ativação.
@@ -96,7 +96,7 @@
           neural um resultado de que:
 
                 Em um periodo predeterminado a definir (uma hora) uma lampada fica por mais tempo ligada ou desligada?
-                EM que horas do dia normalmente a temperatura utrapassa determinado graus acema da valor X estipulado?
+                Em que horas do dia normalmente a temperatura utrapassa determinado graus acema da valor X estipulado?
 
                 Exemplos basicos para se ter uma referencia aplicada do contesto abordado aqui, podendo ser
                 representado por momento A e momento B.
@@ -140,7 +140,7 @@
 
         - Se a saida gerada for igual a desejada os pesos sinápticos e limiares receberão o incremento, sendo
           proporcionalmete aos valores de entrada, contrario a isso sera decrementados.
-          Este processo sera repetido em loop de forma sequencial para as amostras até se obter a saida do perceptron
+          Este processo sera repetido em loop de forma sequencial para as entradas até se obter a saida do perceptron
           iqual a saida desejada de cada amostra.
 
           O limiar é uma variavem que é sjustada para auxiliar o treinamento do perceptron, ela pode ser implementada
@@ -151,29 +151,178 @@
 
                              Verificar como é montada esta formula!!!!
 
+                             ... terminar de escrever esta etapa.
+
 
 '''
 
+# variaveis de identidade
 __autor__ = "Neviim Jads"
+__versao__ = 0.1
+
+# defini os import
+import random
+import copy
 
 
-class Perceptron:
+''' Classe RedeNeural - perceptron
+    ------------------------------
 
-    def __init__(self):
-        pass
+            * Variaveis recebida por parametro:
 
-    def treinar(self):
-        pass
+                saidas_esperadas       - Matrix
+                entradas               - Lista
+                limiar = -1            - Inteiro
+                epocas = 1000          - Inteiro
+                aprendizado = 0.1      - Flout
 
-    def testar(self):
-        pass
+----------------- '''
+class RedeNeural:
 
-    def degrau(self):
-        pass
+    def __init__(self, entradas, saidas_esperadas, aprendizado=0.1, limiar=-1, epocas=10000):
 
-    def sinal(self):
-        pass
+        # variaveis de uso publico desta class
+        self.pesos = []                             # vetor dos pesos
+        self.epocas = epocas                        # número de épocas
+        self.limiar = limiar                        # limiar
+        self.entradas = entradas                    # todas as entradas
+        self.aprendizado = aprendizado              # taxa de aprendizado (entre 0 e 1)
+        self.num_entradas = len(entradas)           # numero de elementos de entradas
+        self.num_elemento = len(entradas[0])        # numero de elementos de cada entrada
+        self.saidas_esperadas = saidas_esperadas    # saídas respectivas de cada entrada
+
+    # metodo para teinar a rede
+    def treinar_a_rede(self):
+
+        # adiciona -1 para cada entrada
+        for amostra in self.entradas:
+            amostra.insert(0, -1)
+
+        # inicia o vetor de pesos com valores aleatórios pequenos *
+        for i in range(self.num_elemento):
+            self.pesos.append(random.random())
+
+        # insere o limiar no vetor de pesos
+        self.pesos.insert(0, self.limiar)
+
+        # inicia o contador de épocas
+        num_epocas = 0
+
+        # loop, até se atingir o fim do trenamento
+        while True:
+
+            # inicialmente erro inexiste
+            erro = False
+
+            # para todas as entradas de treinamento
+            for i in range(self.num_entradas):
+
+                pa = 0 # potencial de ativação
+
+                # pa = somatoria(i=1 até ne) (wi * xi) - theta
+                for item in range(self.num_elemento + 1):
+                    pa += self.pesos[item] * self.entradas[i][item]
+
+                # obtém a saída da rede utilizando a função de ativação
+                y = self.degrau_bipolar(pa)
+
+                # verifica se a saída da rede é diferente da saída desejada
+                if y != self.saidas_esperadas[i]:
+
+                    # calcula o erro: subtração entre a saída desejada e a saída da rede
+                    erro_aux = self.saidas_esperadas[i] - y
+
+                    # faz o ajuste dos pesos para cada elemento da amostra
+                    for j in range(self.num_elemento + 1):
+                        self.pesos[j] = (self.pesos[j] + (self.aprendizado * erro_aux * self.entradas[i][j]))
+
+                    # True = ainda existe erro
+                    erro = True
+
+            # incrementa o número de épocas
+            num_epocas += 1
+
+            # critério de parada é pelo número de épocas ou se não existir erro
+            if num_epocas > self.epocas or not erro:
+                break # sai do while
+
+    # metodo a formula para a função degrau
+    def degrau(self, pa):
+        return 1 if pa >= 0 else 0
+
+    # metodo a formula para a função degrau pipolar (sinal)
+    def degrau_bipolar(self, pa):
+        return 1 if pa >= 0 else -1
+
+    # metodo para testar a rede
+    def teste_da_rede(self, entradas, estado1, estado2):
+
+        # insere o (-1), peso inicial de ajuste.
+        entradas.insert(0, -1)
+
+        # usa o vetor de pesos ajustado durante o treinamento da rede
+        pa = 0
+        for item in range(self.num_elemento + 1):
+            pa += self.pesos[item] * entradas[item]
+
+        # calcula a saída da rede
+        y = self.degrau_bipolar(pa)
+        print pa
+
+        # verifica a qual estado pertence a resposta
+        if y == -1:
+            print('A lampada sera %s' % estado1)
+        else:
+            print('A lampada sera %s' % estado2)
 
 
+# inicio de processamento
 if __name__ == '__main__':
-   pass
+
+    # saida esperada para cada item da entrada
+    saidas_esperadas = [1, -1, -1, 1]
+
+    # referencia de lista de entradas para a rede perceptron que serão
+    # utilizadas nos testes de validação da aprendizagem.
+
+    # entrada que sera aprendica.
+    entradas =            [[0.2315, 1,  0.0],    # hora: 23:15:10, dia: 1, status: acender
+                           [0.0610, 2, -0.1],    # hora: 06:10:20, dia: 2, status: apagar
+                           [0.1220, 3, -0.1],    # hora: 12:20:30, dia: 3, status: apagar
+                           [0.1830, 4,  0.0]]    # hora: 18:30:40, dia: 4, status: acender
+
+    # entradas a serem testadas na rede pos aprendizato, simula leitura do estado atual da lampada
+    entradas_diferentes = [[0.2315, 1, -0.1],    #
+                           [0.0610, 2,  0.0],    #
+                           [0.1220, 3,  0.0],    #
+                           [0.1830, 4, -0.1]]    #
+
+    # copia identica as entradas que serão aprendidas pela rede.
+    entradas_identicas = copy.deepcopy(entradas)
+
+    # cria uma rede perceptron
+    rede_perceptron = RedeNeural(entradas=entradas, saidas_esperadas=saidas_esperadas, aprendizado=0.1, epocas=20000)
+
+    # realiza o treinamento da redeNeural
+    rede_perceptron.treinar_a_rede()
+
+
+    # === Testes...
+
+
+    # testa de validação na rede pos ser treinada com os mesmos itens de entrada do trenamento
+    print "#"
+    print "Testa mesmas estradas do trenamento."
+    for testa_item in entradas_identicas:
+        print(testa_item)
+        rede_perceptron.teste_da_rede(testa_item, 'apagada.', 'acesa.')
+        print
+
+
+    print ""
+    print "#"
+    print "Testa outras entradas diferente do trenamento."
+    for testa_item in entradas_diferentes:
+        print(testa_item)
+        rede_perceptron.teste_da_rede(testa_item, 'apagada.', 'acesa.')
+        print
