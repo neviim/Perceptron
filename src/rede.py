@@ -65,17 +65,17 @@ if __name__ == '__main__':
 
     # testa de validação na rede pos ser treinada com os mesmos itens de entrada do trenamento
     print ('#')
-    print ('Testa mesmas estradas do trenamento.')
+    print ('Testando a redeneural, usando as mesmas estradas antes do trenamento.')
     for testa_item in entradas_identicas:
         print(testa_item)
         rede_perceptron.teste_da_rede(testa_item, 'apagada.', 'acesa.')
         print ()
 
 
-    print ('')
-    print ('#')
-    print ('Testa outras entradas diferente do trenamento.')
-    for testa_item in entradas_diferentes:
-        print(testa_item)
-        rede_perceptron.teste_da_rede(testa_item, 'apagada.', 'acesa.')
-        print ()
+    # print ('')
+    # print ('#')
+    # print ('Testa outras entradas diferente do trenamento.')
+    # for testa_item in entradas_diferentes:
+    #     print(testa_item)
+    #     rede_perceptron.teste_da_rede(testa_item, 'apagada.', 'acesa.')
+    #     print ()
