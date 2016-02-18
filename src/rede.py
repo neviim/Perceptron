@@ -32,9 +32,6 @@ from perceptron import RedeNeural
 # inicio de processamento
 if __name__ == '__main__':
 
-    # saida esperada para cada item da entrada
-    saidas_esperadas = [1, -1, -1, 1]
-
     # referencia de lista de entradas para a rede perceptron que serão
     # utilizadas nos testes de validação da aprendizagem.
 
@@ -44,11 +41,8 @@ if __name__ == '__main__':
                            [0.1220, 3, -0.1],    # hora: 12:20:30, dia: 3, status: apagar
                            [0.1830, 4,  0.0]]    # hora: 18:30:40, dia: 4, status: acender
 
-    # entradas a serem testadas na rede pos aprendizato, simula leitura do estado atual da lampada
-    entradas_diferentes = [[0.2315, 1, -0.1],    #
-                           [0.0610, 2,  0.0],    #
-                           [0.1220, 3,  0.0],    #
-                           [0.1830, 4, -0.1]]    #
+    # saida esperada para cada item da entrada
+    saidas_esperadas = [1, -1, -1, 1]
 
     # copia identica as entradas que serão aprendidas pela rede.
     entradas_identicas = copy.deepcopy(entradas)
@@ -60,7 +54,7 @@ if __name__ == '__main__':
     rede_perceptron.treinar_a_rede()
 
 
-    # === Testes...
+    # === Testes as resposta da rede já tendo passado pela aprendizagem ...
 
 
     # testa de validação na rede pos ser treinada com os mesmos itens de entrada do trenamento
@@ -70,12 +64,3 @@ if __name__ == '__main__':
         print(testa_item)
         rede_perceptron.teste_da_rede(testa_item, 'apagada.', 'acesa.')
         print ()
-
-
-    # print ('')
-    # print ('#')
-    # print ('Testa outras entradas diferente do trenamento.')
-    # for testa_item in entradas_diferentes:
-    #     print(testa_item)
-    #     rede_perceptron.teste_da_rede(testa_item, 'apagada.', 'acesa.')
-    #     print ()
