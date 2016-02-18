@@ -128,6 +128,6 @@
 
                         w = (formula para gerar o vetor com o limiar e os pesos sinápticos)
 
-                             Verificar como é montada esta formula!!!!
+                             ...
 
 
